@@ -1,9 +1,11 @@
 using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Placeholder.Api.DTOs;
 using Placeholder.Api.Models;
+using Placeholder.Api.Services;
 
 namespace Placeholder.Api.Controllers;
 
@@ -12,10 +14,12 @@ namespace Placeholder.Api.Controllers;
 public class PostController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly PushNotificationService _pushService;
 
-    public PostController(AppDbContext context)
+    public PostController(AppDbContext context, PushNotificationService pushService)
     {
         _context = context;
+        _pushService = pushService;
     }
 
     [HttpGet]
@@ -47,7 +51,18 @@ public class PostController : ControllerBase
                 p.Title,
                 p.Slug,
                 p.ContentJson,
-                p.PublishedAt
+                p.PublishedAt,
+                AuthorFollowerCount = p.User.FollowerCount,
+                AuthorCategory = p.User.Category,
+                AuthorAdSenseClientId = p.User.AdSenseClientId,
+                ShowAds = p.User.ShowAds,
+                Author = new
+                {
+                    p.User.FollowerCount,
+                    p.User.Category,
+                    p.User.AdSenseClientId,
+                    p.User.ShowAds
+                }
             })
             .FirstOrDefaultAsync();
 
@@ -85,6 +100,21 @@ public class PostController : ControllerBase
 
         _context.Posts.Add(post);
         await _context.SaveChangesAsync();
+
+        var subscriptions = await _context.PushSubscriptions
+            .Where(ps => ps.AuthorUserId == userId)
+            .ToListAsync();
+
+        var payload = JsonSerializer.Serialize(new
+        {
+            title = "New Post: " + post.Title,
+            url = "/post/" + post.Slug
+        });
+
+        foreach (var sub in subscriptions)
+        {
+            await _pushService.SendNotificationAsync(sub, payload);
+        }
 
         return Ok(post);
     }

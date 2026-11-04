@@ -10,6 +10,7 @@ public class User
     public int FollowerCount { get; set; } = 0;
     public string? AdSenseClientId { get; set; }
     public bool IsPro { get; set; } = false;
+    public bool ShowAds { get; set; } = true;
 
     // Navigation properties
     public ICollection<Post> Posts { get; set; } = new List<Post>();

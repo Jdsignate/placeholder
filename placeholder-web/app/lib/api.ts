@@ -4,6 +4,19 @@ export interface Post {
   slug: string;
   contentJson: string;
   publishedAt: string;
+  authorFollowerCount?: number;
+  authorCategory?: string;
+  authorAdSenseClientId?: string | null;
+  showAds?: boolean;
+  author?: {
+    followerCount?: number;
+    category?: string;
+    adSenseClientId?: string | null;
+    showAds?: boolean;
+  };
+  followerCount?: number;
+  category?: string;
+  adSenseClientId?: string | null;
 }
 
 export async function fetchPosts(): Promise<Post[]> {
