@@ -75,6 +75,43 @@ public class PostController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("analytics")]
+    public async Task<IActionResult> GetAnalytics()
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized(new { message = "Invalid user token." });
+        }
+
+        var userPostsQuery = _context.Posts.Where(p => p.UserId == userId);
+
+        var totalImpressions = await userPostsQuery.SumAsync(p => (long?)p.Impressions) ?? 0L;
+        var totalLegacyViews = await userPostsQuery.SumAsync(p => (long?)p.LegacyViews) ?? 0L;
+
+        var topPosts = await userPostsQuery
+            .OrderByDescending(p => p.Impressions)
+            .Take(5)
+            .Select(p => new
+            {
+                p.Id,
+                p.Title,
+                p.Slug,
+                p.Impressions,
+                p.LegacyViews,
+                p.PublishedAt
+            })
+            .ToListAsync();
+
+        return Ok(new
+        {
+            totalImpressions,
+            totalLegacyViews,
+            topPosts
+        });
+    }
+
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreatePost([FromBody] CreatePostRequest request)
     {

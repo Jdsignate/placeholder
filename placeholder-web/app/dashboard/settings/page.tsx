@@ -169,6 +169,13 @@ export default function SettingsPage() {
           </Link>
           <span>·</span>
           <Link
+            href="/dashboard/analytics"
+            className="font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"
+          >
+            Analytics
+          </Link>
+          <span>·</span>
+          <Link
             href="/"
             className="font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"
           >

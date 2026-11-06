@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -88,7 +89,23 @@ export default function DashboardPage() {
   return (
     <main className="max-w-3xl mx-auto py-12 px-6 font-sans">
       <div className="flex items-center justify-between pb-6 mb-8 border-b border-neutral-200 dark:border-neutral-800">
-        <span className="text-sm font-medium text-neutral-500">Writer Studio</span>
+        <div className="flex items-center gap-3 text-sm">
+          <span className="font-semibold text-neutral-900 dark:text-neutral-100">Writer Studio</span>
+          <span className="text-neutral-400">·</span>
+          <Link
+            href="/dashboard/analytics"
+            className="font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"
+          >
+            Analytics
+          </Link>
+          <span className="text-neutral-400">·</span>
+          <Link
+            href="/dashboard/settings"
+            className="font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"
+          >
+            Settings
+          </Link>
+        </div>
         <button
           onClick={handlePublish}
           disabled={isPublishing}
