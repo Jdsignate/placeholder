@@ -50,7 +50,7 @@ export default async function PostPage({
       />
       <div
         dangerouslySetInnerHTML={{ __html: post.contentJson }}
-        className="prose lg:prose-xl dark:prose-invert"
+        className="prose prose-lg prose-slate dark:prose-invert mx-auto prose-a:text-blue-600 prose-headings:font-bold prose-img:rounded-xl"
       />
     </article>
   );

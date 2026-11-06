@@ -20,12 +20,15 @@ export default async function Home() {
         {posts && posts.length > 0 ? (
           <div className="space-y-8">
             {posts.map((post) => (
-              <article key={post.id} className="group">
+              <article
+                key={post.id}
+                className="group rounded-xl border border-neutral-200/70 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/40 p-6 md:p-8 transition-all hover:border-neutral-300 dark:hover:border-neutral-700 shadow-xs"
+              >
                 <Link href={`/post/${post.slug}`} className="block">
-                  <h2 className="text-xl font-semibold tracking-tight group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors">
+                  <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {post.title}
                   </h2>
-                  <time className="block mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+                  <time className="block mt-3 text-xs uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
                     {new Date(post.publishedAt).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "long",
